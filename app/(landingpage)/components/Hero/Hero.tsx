@@ -11,10 +11,10 @@ export default function Hero() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           <div className="order-2 md:order-1 flex flex-col gap-6 md:gap-8">
             <div className="flex flex-col gap-4">
-              <span className="text-primary font-bold tracking-widest text-xs uppercase">
+              <span className="text-blue-400/80 font-bold tracking-widest text-xs uppercase">
                 Estilismo Canino Profesional
               </span>
-              <h1 className="text-[#111418] dark:text-white text-4xl md:text-6xl font-black leading-tight tracking-tight">
+              <h1 className="text-slate-800 dark:text-white text-4xl md:text-5xl font-bold leading-tight tracking-tight">
                 Tu mejor amigo merece el mejor cuidado
               </h1>
               <p className="text-gray-600 dark:text-gray-400 text-lg leading-relaxed max-w-[500px]">

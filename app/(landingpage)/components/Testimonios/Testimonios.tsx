@@ -8,7 +8,7 @@ export default function Testimonios() {
   return (
     <MaxWidthWrapper>
       <section
-        className="px-4 py-20 bg-blue-200/40 rounded-2xl mb-20"
+        className="px-4 py-20 bg-sky-300/10 rounded-2xl mb-20 shadow-xs"
         id="testimonios"
       >
         <div className="text-center mb-16">

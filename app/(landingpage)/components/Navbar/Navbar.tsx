@@ -16,7 +16,7 @@ export default function Navbar() {
           <div className="hidden md:flex items-center gap-9">
             {NavegacionData.map(({ href, id, titulo }) => (
               <Link
-                className="text-slate-700 text-sm font-medium hover:text-primary transition-colors"
+                className="text-slate-700 text-sm font-medium hover:text-blue-400/70 transition-colors"
                 key={id}
                 href={href}
               >
@@ -24,7 +24,7 @@ export default function Navbar() {
               </Link>
             ))}
           </div>
-          <Button className="bg-blue-400/90 flex min-w-[120px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 text-slate-100 text-sm font-semibold leading-normal tracking-widest">
+          <Button className="bg-blue-600/80 flex min-w-[120px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 text-slate-100 text-sm font-semibold leading-normal tracking-widest">
             <Link className="" href={`/`}>
               Reservar Turno
             </Link>
