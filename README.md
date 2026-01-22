@@ -14,7 +14,7 @@ pnpm dev
 bun dev
 ```
 <---Vista Previa--->
-
+![Texto alternativo](public/ScreenShot/preview.png)
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
