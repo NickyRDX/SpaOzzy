@@ -129,4 +129,5 @@ body {
   width: 100%;
   min-height: 100dvh;
   font-family: var(--font-montserrat);
+  scroll-behavior: smooth;
 }

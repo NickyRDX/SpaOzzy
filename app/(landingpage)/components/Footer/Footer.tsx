@@ -51,6 +51,12 @@ export default function Footer() {
               >
                 Testimonios
               </Link>
+              <Link
+                className="hover:text-blue-400 transition-colors"
+                href={`Precios`}
+              >
+                Precios
+              </Link>
             </nav>
           </div>
           <div className="flex flex-col gap-6">
@@ -86,7 +92,7 @@ export default function Footer() {
           </div>
         </div>
         <div className="max-w-7xl mx-auto px-4 pt-8 border-t border-gray-100 text-center">
-          © 2026 DogStyle Peluquería Canina. Todos los derechos reservados.
+          © 2026 Spa Ozzy Peluquería Canina. Todos los derechos reservados.
         </div>
       </footer>
     </MaxWidthWrapper>
