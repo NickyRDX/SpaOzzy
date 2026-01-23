@@ -26,12 +26,14 @@ export default function Hero() {
               <Button className="flex min-w-[180px] cursor-pointer items-center justify-center rounded-lg h-14 px-8 bg-blue-400 text-white text-base font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] transition-transform">
                 Reserva tu Turno
               </Button>
-              <Button
-                variant="secondary"
-                className="flex min-w-[180px] cursor-pointer items-center justify-center rounded-lg h-14 px-8 border-2 border-primary/20 text-primary dark:text-primary font-bold hover:bg-primary/5 transition-colors"
-              >
-                Ver Precios
-              </Button>
+              <Link href={`/Precios`}>
+                <Button
+                  variant="secondary"
+                  className="flex min-w-[180px] cursor-pointer items-center justify-center rounded-lg h-14 px-8 border-2 border-primary/20 text-primary dark:text-primary font-bold hover:bg-primary/5 transition-colors"
+                >
+                  Ver Precios
+                </Button>
+              </Link>
             </div>
           </div>
           <div className="order-1 md:order-2">

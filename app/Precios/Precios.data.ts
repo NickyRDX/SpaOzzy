@@ -15,7 +15,7 @@ export const PreciosData: PreciosDataPros[] = [
   // Primer plan: Plan Estandar
   {
     id: 1,
-    titulo: 'Plan Estandar',
+    titulo: 'Estandar',
     precio: 'AR$15.000',
     href: '#',
     descripcion:
@@ -30,7 +30,7 @@ export const PreciosData: PreciosDataPros[] = [
   // Segundo plan: Plan Premium
   {
     id: 2,
-    titulo: 'Plan Premium',
+    titulo: 'Premium',
     precio: 'AR$20.000',
     href: '#',
     descripcion: 'El mejor tratamiento para un miembro de la familia, muestrale lo mucho que lo amas.',
