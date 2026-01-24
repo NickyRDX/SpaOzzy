@@ -1,3 +1,4 @@
+"use client"
 import MaxWidthWrapper from '@/components/Shared/MaxWidthWrapper/MaxWidthWrapper'
 import { Globe, Mail, PawPrint, Share2 } from 'lucide-react'
 import Link from 'next/link'

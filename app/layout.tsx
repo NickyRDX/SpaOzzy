@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Montserrat } from 'next/font/google'
 import './globals.css'
+import { ClerkProvider } from '@clerk/nextjs'
 
 const MontSans = Montserrat({
   variable: '--font-montserrat',
@@ -18,10 +19,12 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="es-AR">
-      <body className={`${MontSans.variable} bg-slate-200/95 antialiased`}>
-        {children}
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="es-AR">
+        <body className={`${MontSans.variable} bg-slate-200/95 antialiased`}>
+          {children}
+        </body>
+      </html>
+    </ClerkProvider>
   )
 }

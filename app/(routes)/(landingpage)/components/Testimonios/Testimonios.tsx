@@ -1,3 +1,4 @@
+"use client"
 import MaxWidthWrapper from '@/components/Shared/MaxWidthWrapper/MaxWidthWrapper'
 import Client1 from '@/public/images/cliente1.png'
 import Client2 from '@/public/images/cliente2.png'

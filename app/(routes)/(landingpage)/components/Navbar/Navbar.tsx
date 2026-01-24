@@ -1,3 +1,4 @@
+"use client"
 import { Button } from '@/components/ui/button'
 import { PawPrint } from 'lucide-react'
 import Link from 'next/link'
@@ -27,7 +28,7 @@ export default function Navbar() {
             ))}
           </div>
           <Button className="bg-blue-600/80 flex min-w-[120px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 text-slate-100 text-sm font-semibold leading-normal tracking-widest">
-            <Link className="" href={`/`}>
+            <Link className="" href={`/Turnos`}>
               Reservar Turno
             </Link>
           </Button>

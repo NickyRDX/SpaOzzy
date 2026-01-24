@@ -1,3 +1,4 @@
+"use client"
 import MaxWidthWrapper from '@/components/Shared/MaxWidthWrapper/MaxWidthWrapper'
 import { ServicioDatos } from './Servicios.data'
 
