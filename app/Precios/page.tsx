@@ -6,7 +6,10 @@ import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
 import { PreciosData } from './Precios.data'
-import { CheckIcon } from 'lucide-react'
+import { ArrowRight, CheckIcon } from 'lucide-react'
+import { Separator } from '@/components/ui/separator'
+import AccordionComponent from './components/Accordion'
+import Footer from '../(landingpage)/components/Footer/Footer'
 
 export default function PreciosPage() {
   return (
@@ -14,10 +17,10 @@ export default function PreciosPage() {
       <Navbar />
       <main className="flex-1">
         <MaxWidthWrapper>
-          <div className="mx-auto px-6 lg:px-10 py-12 md:py-20 text-center md:text-left">
+          <div className="mx-auto px-6 mb-10 lg:px-10 py-12 md:py-20 text-center md:text-left">
             <div className="flex flex-wrap items-end justify-between gap-6">
               <div className="flex max-w-2xl flex-col gap-4">
-                <h1 className="text-slate-700 text-4xl md:text-5xl font-bold leading-tight tracking-[-0.033em]">
+                <h1 className="text-slate-800 text-4xl md:text-5xl font-bold leading-tight tracking-[-0.022em]">
                   Precios de nuestros servicios
                 </h1>
                 <p className="text-slate-500 text-lg font-normal leading-relaxed">
@@ -57,22 +60,28 @@ export default function PreciosPage() {
                   >
                     <div className="flex flex-col gap-2 space-y-3 md:space-y-1">
                       <h2 className="text-slate-700/80 text-lg text-pretty font-bold md:text-base">
+                        {disponible && (
+                          <p className="text-center text-[14px] tracking-wider -m-2 bg-linear-to-r from-blue-600 to-sky-600 bg-clip-text text-transparent">
+                            Recomendado
+                          </p>
+                        )}
+                        <br />
                         {titulo}
                       </h2>
-                      <p className="text-sky-600/80 text-pretty text-4xl font-semibold tracking-[-0.033em] md:text-3xl">
+                      <p className="text-blue-400 text-pretty text-3xl font-semibold tracking-[-0.033em] md:text-4xl">
                         {precio}
-                        <span className="text-lg text-slate-600 md:text-base">
+                        <span className="text-lg tracking-tighter text-slate-600 md:text-[16px]">
                           {' '}
                           / sesión
                         </span>
                       </p>
-                      <span className="text-slate-500 tracking-tight text-pretty text-base md:text-lg">
+                      <span className="text-slate-600 tracking-tight text-pretty text-[14px] md:text-base">
                         {descripcion}
                       </span>
                       <ul
                         role="list"
                         className={cn(
-                          caracteristicas ? 'text-gray-600' : 'text-gray-600',
+                          caracteristicas ? 'text-slate-700' : 'text-slate-700',
                           'mt-5 space-y-3 text-sm/6 sm:mt-8'
                         )}
                       >
@@ -80,7 +89,7 @@ export default function PreciosPage() {
                           <li className="flex items-center gap-x-3" key={i}>
                             <CheckIcon
                               aria-hidden="true"
-                              className="size-5 text-sky-800"
+                              className="size-5 text-sky-600"
                             />
                             {i}
                           </li>
@@ -91,18 +100,23 @@ export default function PreciosPage() {
                     <Button
                       variant={disponible ? 'default' : 'ghost'}
                       className={cn(
-                        disponible ? 'bg-blue-600/80 hover:bg-blue-900/90 transition-colors' : 'border-slate-400/50 border-solid border',
-                        'max-w-2xl mt-4 cursor-pointer'
+                        disponible
+                          ? 'bg-blue-600/80 hover:bg-blue-900/90 transition-colors'
+                          : 'border-slate-400/50 border-solid border',
+                        'max-w-2xl mt-4 flex items-center justify-center cursor-pointer'
                       )}
                     >
                       Seleccionar
+                      <ArrowRight className="size-4 ml-1 mt-0.5" />
                     </Button>
                   </div>
                 )
               )}
             </div>
           </div>
+          <AccordionComponent />
         </MaxWidthWrapper>
+        <Footer />
       </main>
     </>
   )
