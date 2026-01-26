@@ -23,7 +23,7 @@ export default function Hero() {
               </p>
             </div>
             <div className="flex flex-wrap gap-4">
-              <Link href={'/Turnos'}>
+              <Link href={'/reservar'}>
                 <Button className="flex min-w-[180px] cursor-pointer items-center justify-center rounded-lg h-14 px-8 bg-blue-400 text-white text-base font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] transition-transform">
                   Reserva tu Turno
                 </Button>

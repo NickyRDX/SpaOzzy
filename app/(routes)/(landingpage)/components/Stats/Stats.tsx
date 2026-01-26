@@ -54,7 +54,7 @@ export default function Stats() {
 
   return (
     <MaxWidthWrapper>
-      <section className="px-4 py-8">
+      <section className="px-4 py-8 mb-10 md:mb-28">
         <div className="flex flex-wrap gap-6 justify-between items-center bg-white  dark:bg-background-dark p-8 rounded-2xl border border-[#dbe0e6] dark:border-gray-800">
           <div className="flex flex-col gap-1 items-center md:items-start">
             <p className="text-blue-400 text-3xl font-bold">{perro}+</p>

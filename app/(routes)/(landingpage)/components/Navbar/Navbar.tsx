@@ -5,11 +5,11 @@ import Link from 'next/link'
 import { NavegacionData } from './Navbar.data'
 export default function Navbar() {
   return (
-    <nav className="sticky z-50 top-0 inset-x-0 shadow-2xs bg-white/80 backdrop-blur-md border border-b border-solid border-[#f0f2f5]">
+    <nav className="sticky z-50 top-0 inset-x-0 shadow-2xs bg-white/80 backdrop-blur-lg border border-b border-solid border-[#f0f2f5]">
       <div className="max-w-7xl mx-auto px-4 md:px-10 py-3 flex items-center justify-between whitespace-nowrap">
         <Link href={`/`}>
           <div className="flex items-center gap-x-3">
-            <PawPrint className="fill-blue-400 stroke-blue-400" size={34} />
+            <PawPrint className="fill-blue-400 stroke-blue-400" size={32} />
             <h2 className="text-slate-800 text-xl font-bold leading-tight">
               SpaOzzy
             </h2>
@@ -28,7 +28,7 @@ export default function Navbar() {
             ))}
           </div>
           <Button className="bg-blue-600/80 flex min-w-[120px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 text-slate-100 text-sm font-semibold leading-normal tracking-widest">
-            <Link className="" href={`/Turnos`}>
+            <Link className="" href={`/reservar`}>
               Reservar Turno
             </Link>
           </Button>

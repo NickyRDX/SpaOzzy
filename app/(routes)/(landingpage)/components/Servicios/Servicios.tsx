@@ -5,7 +5,7 @@ import { ServicioDatos } from './Servicios.data'
 export default function Servicios() {
   return (
     <MaxWidthWrapper>
-      <section className="py-20 px-4" id="servicios">
+      <section className="py-20 px-4 mb-10 md:mb-28" id="servicios">
         <div className="flex flex-col gap-4 mb-12">
           <h2 className="text-blue-300 font-bold tracking-widest text-xs uppercase">
             Lo que hacemos
