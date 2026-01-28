@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { Montserrat } from 'next/font/google'
 import './globals.css'
 import { ClerkProvider } from '@clerk/nextjs'
-
+import { Toaster } from 'sonner'
 const MontSans = Montserrat({
   variable: '--font-montserrat',
   subsets: ['latin'],
@@ -23,6 +23,7 @@ export default function RootLayout({
       <html lang="es-AR">
         <body className={`${MontSans.variable} bg-slate-200/95 antialiased`}>
           {children}
+          <Toaster position='top-center'/>
         </body>
       </html>
     </ClerkProvider>

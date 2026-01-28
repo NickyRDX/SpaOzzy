@@ -1,21 +1,22 @@
-'use client'
-import MaxWidthWrapper from '@/components/Shared/MaxWidthWrapper/MaxWidthWrapper'
-import React, { useState } from 'react'
+"use client";
+import MaxWidthWrapper from "@/components/Shared/MaxWidthWrapper/MaxWidthWrapper";
+import React, { useState } from "react";
 import {
   Banknote,
   CreditCard,
   Calendar as CalendarIcon,
   Clock,
-} from 'lucide-react'
-import NavReservar from './components/NavReservar/NavReservar'
-import { Input } from '@/components/ui/input'
-import { Calendar } from '@/components/ui/calendar'
-import { Button } from '@/components/ui/button'
-import { supabase } from '@/lib/supabase' //importamos la llave para supabase del archivo lib/supabase.ts
-import { useUser } from '@clerk/nextjs'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import * as z from 'zod'
+} from "lucide-react";
+import NavReservar from "./components/NavReservar/NavReservar";
+import { Input } from "@/components/ui/input";
+import { Calendar } from "@/components/ui/calendar";
+import { Button } from "@/components/ui/button";
+import { supabase } from "@/lib/supabase"; //importamos la llave para supabase del archivo lib/supabase.ts
+import { useUser } from "@clerk/nextjs";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { formSchema } from "./form";
+import z from "zod";
 import {
   Form,
   FormControl,
@@ -23,60 +24,91 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form'
-
-const formSchema = z.object({
-  nombreCompleto: z.string(),
-  nombreMascota: z.string(),
-  raza: z.string(),
-  metodoPago: z.string(),
-  tipoServicio: z.string(),
-  fecha: z.date(),
-  horario: z.string(),
-})
+} from "@/components/ui/form";
+import { toast } from "sonner";
 
 export default function page() {
-  const [date, setDate] = useState<Date | undefined>(new Date())
-  const [selectedPayment, setSelectedPayment] = useState('efectivo')
-  const [selectedService, setSelectedService] = useState('premium')
-  const [selectedTime, setSelectedTime] = useState('')
-  const { user } = useUser()
-  const [cargando, setCargando] = useState<boolean>(false)
+  const [date, setDate] = useState<Date | undefined>(new Date());
+  const [selectedPayment, setSelectedPayment] = useState("efectivo");
+  const [selectedService, setSelectedService] = useState("premium");
+  const [selectedTime, setSelectedTime] = useState("");
+  const { user } = useUser();
+
   const horarios = [
-    '09:00 AM',
-    '10:30 AM',
-    '11:00 AM',
-    '12:00 AM',
-    '03:00 PM',
-    '03:30 PM',
-    '04:00 PM',
-    '04:30 PM',
-    '05:00 PM',
-    '05:30 PM',
-    '06:00 PM',
-    '06:30 PM',
-    '07:00 PM',
-    '07:30 PM',
-    '08:00 PM',
-  ]
+    "09:00 AM",
+    "10:30 AM",
+    "11:00 AM",
+    "12:00 AM",
+    "03:00 PM",
+    "03:30 PM",
+    "04:00 PM",
+    "04:30 PM",
+    "05:00 PM",
+    "05:30 PM",
+    "06:00 PM",
+    "06:30 PM",
+    "07:00 PM",
+    "07:30 PM",
+    "08:00 PM",
+  ];
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      nombreCompleto: '',
-      nombreMascota: '',
-      raza: '',
-      metodoPago: 'efectivo',
-      tipoServicio: 'premium',
+      nombreCompleto: "",
+      nombreMascota: "",
+      raza: "",
+      metodoPago: "efectivo",
+      tipoServicio: "standard",
       fecha: new Date(),
-      horario: '',
+      horario: "",
     },
-  })
+  });
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    // Aquí puedes manejar el envío del formulario
-    console.log(values)
-  }
+  // El operador ...values es el "spread operator" en JavaScript.
+  // Se utiliza para expandir (copiar) todas las propiedades del objeto values en un nuevo objeto.
+  // Por ejemplo, si values es { nombre: 'Juan', edad: 30 }, entonces ...values equivale a poner nombre: 'Juan', edad: 30 dentro de otro objeto literal.
+  // a un nuevo objeto, y luego se agrega userId.
+  // Aquí, ...values copia todas las propiedades del formulario (nombreCompleto, nombreMascota, etc)
+  // Ejemplo para ver cómo es el objeto values
+
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    // 1. Verificación de seguridad
+    if (!user || !user.id) return alert("Debes iniciar sesión");
+
+    // 2. EL MAPEO (La conexión mágica)
+    const datosTurno = {
+      // Columna DB (Español):Dato del Formulario (Zod)
+      usuario_id: user.id,
+      nombre_dueno: values.nombreCompleto,
+      nombre_mascota: values.nombreMascota,
+      raza: values.raza || null,
+      // ¡BORRAMOS LA LÍNEA DE SEXO AQUÍ TAMBIÉN!
+      servicio: values.tipoServicio,
+      precio: values.tipoServicio === "premium" ? 20000 : values.tipoServicio === "standard" ? 15000 : 0,
+      fecha: values.fecha.toISOString().split("T")[0],
+      horario: values.horario,
+      forma_pago: values.metodoPago,
+      estado: values.metodoPago === 'efectivo' ? 'confirmado' : 'pendiente',
+    };
+
+    console.log("Enviando a Supabase (Español):", datosTurno);
+
+    // 3. ENVIAR A LA TABLA 'TURNOS'
+    const { data, error } = await supabase
+      .from("turnos") // Asegúrate de que tu tabla en Supabase se llame 'turnos'
+      .insert([datosTurno])
+      .select();
+
+  
+    if (!error) {
+      toast.success("La Reserva se ha realizado exitosamente✅")
+      console.log("data:", data);
+    } else {
+      console.error("Error:", error.message);
+      toast.error("❌Error al guardar: " + error.message);
+    }
+  };
   return (
     <>
       <NavReservar />
@@ -179,13 +211,13 @@ export default function page() {
                               <button
                                 type="button"
                                 onClick={() => {
-                                  field.onChange('efectivo')
-                                  setSelectedPayment('efectivo')
+                                  field.onChange("efectivo");
+                                  setSelectedPayment("efectivo");
                                 }}
                                 className={`p-4 rounded-xl border-2 transition-all flex items-center gap-3 ${
-                                  selectedPayment === 'efectivo'
-                                    ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
-                                    : 'border-slate-200 dark:border-slate-700 hover:border-slate-300'
+                                  selectedPayment === "efectivo"
+                                    ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
+                                    : "border-slate-200 dark:border-slate-700 hover:border-slate-300"
                                 }`}
                               >
                                 <Banknote className="w-5 h-5 text-slate-600 dark:text-slate-400" />
@@ -196,13 +228,13 @@ export default function page() {
                               <button
                                 type="button"
                                 onClick={() => {
-                                  field.onChange('digital')
-                                  setSelectedPayment('digital')
+                                  field.onChange("mercadopago");
+                                  setSelectedPayment("mercadopago");
                                 }}
                                 className={`p-4 rounded-xl border-2 transition-all flex items-center gap-3 ${
-                                  selectedPayment === 'digital'
-                                    ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
-                                    : 'border-slate-200 dark:border-slate-700 hover:border-slate-300'
+                                  selectedPayment === "mercadopago"
+                                    ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
+                                    : "border-slate-200 dark:border-slate-700 hover:border-slate-300"
                                 }`}
                               >
                                 <CreditCard className="w-5 h-5 text-slate-600 dark:text-slate-400" />
@@ -233,13 +265,13 @@ export default function page() {
                               <button
                                 type="button"
                                 onClick={() => {
-                                  field.onChange('estandar')
-                                  setSelectedService('estandar')
+                                  field.onChange("standard");
+                                  setSelectedService("standard");
                                 }}
                                 className={`p-6 rounded-xl border-2 transition-all text-left ${
-                                  selectedService === 'estandar'
-                                    ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
-                                    : 'border-slate-200 dark:border-slate-700 hover:border-slate-300'
+                                  selectedService === "estandar"
+                                    ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
+                                    : "border-slate-200 dark:border-slate-700 hover:border-slate-300"
                                 }`}
                               >
                                 <h4 className="text-lg font-bold mb-2 text-slate-900 dark:text-white">
@@ -249,19 +281,19 @@ export default function page() {
                                   Incluye baño, secado y corte de uñas básico.
                                 </p>
                                 <span className="text-xl font-bold text-blue-400 dark:text-blue-400">
-                                  $12.000
+                                  $15.000
                                 </span>
                               </button>
                               <button
                                 type="button"
                                 onClick={() => {
-                                  field.onChange('premium')
-                                  setSelectedService('premium')
+                                  field.onChange("premium");
+                                  setSelectedService("premium");
                                 }}
                                 className={`p-6 rounded-xl border-2 transition-all text-left relative ${
-                                  selectedService === 'premium'
-                                    ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
-                                    : 'border-slate-200 dark:border-slate-700 hover:border-slate-300'
+                                  selectedService === "premium"
+                                    ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
+                                    : "border-slate-200 dark:border-slate-700 hover:border-slate-300"
                                 }`}
                               >
                                 <div className="flex justify-between items-start mb-2">
@@ -309,11 +341,9 @@ export default function page() {
                               <Calendar
                                 mode="single"
                                 selected={date}
-                                onSelect={(newDate) => {
-                                  setDate(newDate)
-                                  field.onChange(newDate)
-                                }}
-                                className="rounded-md border w-full border-slate-200 dark:border-slate-700 md:max-w-full"
+                                onSelect={setDate}
+                                className="rounded-md border w-full p-1  border-slate-200 dark:border-slate-700 md:max-w-full"
+                                captionLayout="dropdown"
                               />
                             </FormControl>
                             <FormMessage />
@@ -343,13 +373,13 @@ export default function page() {
                                       key={hora}
                                       type="button"
                                       onClick={() => {
-                                        setSelectedTime(hora)
-                                        field.onChange(hora)
+                                        setSelectedTime(hora);
+                                        field.onChange(hora);
                                       }}
                                       className={`py-3 px-4 rounded-lg text-sm border-2 font-medium transition-all ${
                                         selectedTime === hora
-                                          ? 'bg-blue-500 text-white border-blue-200'
-                                          : 'border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:border-blue-300'
+                                          ? "bg-blue-500 text-white border-blue-200"
+                                          : "border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:border-blue-300"
                                       }`}
                                     >
                                       {hora}
@@ -380,13 +410,13 @@ export default function page() {
                     <div className="space-y-4 mb-6">
                       <div className="flex justify-between text-sm">
                         <span className="text-slate-600 dark:text-slate-400">
-                          Servicio{' '}
-                          {selectedService === 'premium'
-                            ? 'Premium'
-                            : 'Estándar'}
+                          Servicio{" "}
+                          {selectedService === "premium"
+                            ? "Premium"
+                            : "Estándar"}
                         </span>
                         <span className="font-semibold text-slate-900 dark:text-white">
-                          ${selectedService === 'premium' ? '20.000' : '12.000'}
+                          ${selectedService === "premium" ? "20.000" : "12.000"}
                         </span>
                       </div>
                       <div className="flex justify-between text-sm">
@@ -414,13 +444,14 @@ export default function page() {
                         </span>
                       </div>
                       <div className="text-3xl font-bold text-blue-400 dark:text-blue-400 mt-1">
-                        AR${selectedService === 'premium' ? '20.000' : '12.000'}
+                        AR${selectedService === "premium" ? "20.000" : "12.000"}
                       </div>
                     </div>
 
                     <Button
                       type="submit"
                       className="w-full bg-slate-900 dark:bg-slate-800 text-white py-4 rounded-xl font-semibold hover:bg-slate-800 dark:hover:bg-slate-700 transition-all"
+                      onClick={() => form.handleSubmit(onSubmit)}
                     >
                       Confirmar Reserva
                     </Button>
@@ -448,7 +479,7 @@ export default function page() {
                           ¿Necesitas ayuda?
                         </p>
                         <p className="text-xs text-slate-600 dark:text-slate-400">
-                          Habla con un asesor por{' '}
+                          Habla con un asesor por{" "}
                           <a
                             href="https://wa.me/"
                             className="text-blue-600 dark:text-blue-400 font-medium hover:underline"
@@ -466,5 +497,5 @@ export default function page() {
         </main>
       </MaxWidthWrapper>
     </>
-  )
+  );
 }
