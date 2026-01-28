@@ -17,6 +17,6 @@ export const NavegacionData = [
   {
     id: 4,
     titulo: 'Precios',
-    href: 'Precios',
+    href: 'precios',
   },
 ]

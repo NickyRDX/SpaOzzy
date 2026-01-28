@@ -1,8 +1,10 @@
-"use client"
+'use client'
 import { Button } from '@/components/ui/button'
 import { PawPrint } from 'lucide-react'
 import Link from 'next/link'
 import { NavegacionData } from './Navbar.data'
+import { usePathname } from 'next/navigation'
+import { cn } from '@/lib/utils'
 export default function Navbar() {
   return (
     <nav className="sticky z-50 top-0 inset-x-0 shadow-2xs bg-white/80 backdrop-blur-lg border border-b border-solid border-[#f0f2f5]">
@@ -19,7 +21,9 @@ export default function Navbar() {
           <div className="hidden md:flex items-center gap-9">
             {NavegacionData.map(({ href, id, titulo }) => (
               <Link
-                className="text-slate-700 text-sm font-medium hover:text-blue-400/70 transition-colors"
+                className={cn(
+                  'text-slate-700 text-sm font-medium hover:text-blue-500/80 transition-colors'
+                )}
                 key={id}
                 href={href}
               >

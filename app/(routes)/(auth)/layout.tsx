@@ -7,8 +7,10 @@ export default function LayoutAuth({
   children: React.ReactNode
 }) {
   return (
+    <>
     <MaxWidthWrapper>
       <section className="flex mx-auto max-w-3xl justify-center items-center min-h-screen">{children}</section>
     </MaxWidthWrapper>
+    </>
   )
 }

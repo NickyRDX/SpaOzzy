@@ -54,7 +54,7 @@ export default function Footer() {
               </Link>
               <Link
                 className="hover:text-blue-400 transition-colors"
-                href={`Precios`}
+                href={`/precios`}
               >
                 Precios
               </Link>

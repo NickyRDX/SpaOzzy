@@ -1,3 +1,4 @@
+'use client'
 import MaxWidthWrapper from '@/components/Shared/MaxWidthWrapper/MaxWidthWrapper'
 import { Button } from '@/components/ui/button'
 import Image from 'next/image'
@@ -24,11 +25,11 @@ export default function Hero() {
             </div>
             <div className="flex flex-wrap gap-4">
               <Link href={'/reservar'}>
-                <Button className="flex min-w-[180px] cursor-pointer items-center justify-center rounded-lg h-14 px-8 bg-blue-400 text-white text-base font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] transition-transform">
+                <Button className="flex min-w-[180px] cursor-pointer items-center justify-center rounded-lg h-14 px-8 bg-blue-500 text-white text-base font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] transition-transform">
                   Reserva tu Turno
                 </Button>
               </Link>
-              <Link href={`/Precios`} className="block md:hidden">
+              <Link href={`/precios`} className="block md:hidden">
                 <Button
                   variant="secondary"
                   className="flex min-w-[180px] cursor-pointer items-center justify-center rounded-lg h-14 px-8 border-2 border-primary/20 text-primary dark:text-primary font-bold hover:bg-primary/5 transition-colors"
