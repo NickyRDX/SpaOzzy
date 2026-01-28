@@ -39,7 +39,7 @@ export default function page() {
   const [date, setDate] = useState<Date | undefined>(new Date())
   const [selectedPayment, setSelectedPayment] = useState('efectivo')
   const [selectedService, setSelectedService] = useState('premium')
-  const [selectedTime, setSelectedTime] = useState('11:00 AM')
+  const [selectedTime, setSelectedTime] = useState('')
   const { user } = useUser()
   const [cargando, setCargando] = useState<boolean>(false)
   const horarios = [
@@ -69,7 +69,7 @@ export default function page() {
       metodoPago: 'efectivo',
       tipoServicio: 'premium',
       fecha: new Date(),
-      horario: '11:00 AM',
+      horario: '',
     },
   })
 
@@ -112,7 +112,7 @@ export default function page() {
                             <FormControl>
                               <Input
                                 className="w-full"
-                                placeholder="Ej: Juan Pérez"
+                                placeholder="Ej: Antoni Diaz"
                                 type="text"
                                 {...field}
                               />
@@ -132,7 +132,7 @@ export default function page() {
                             <FormControl>
                               <Input
                                 className="w-full"
-                                placeholder="Ej: Rocky"
+                                placeholder="Ej: Rex"
                                 type="text"
                                 {...field}
                               />
@@ -152,7 +152,7 @@ export default function page() {
                             <FormControl>
                               <Input
                                 className="w-full"
-                                placeholder="Ej: Golden Retriever"
+                                placeholder="Ej: Rottweiler"
                                 type="text"
                                 {...field}
                               />
