@@ -1,8 +1,45 @@
-"use client"
-import MaxWidthWrapper from '@/components/Shared/MaxWidthWrapper/MaxWidthWrapper'
-import { ServicioDatos } from './Servicios.data'
+"use client";
+import { useEffect, useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import MaxWidthWrapper from "@/components/Shared/MaxWidthWrapper/MaxWidthWrapper";
+import { ServicioDatos } from "./Servicios.data";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function Servicios() {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    const cards = containerRef.current.children;
+
+    gsap.fromTo(
+      cards,
+      {
+        opacity: 0,
+        y: 60,
+      },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: "power3.out",
+        stagger: 0.15,
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top 85%",
+          toggleActions: "play none none none",
+        },
+      }
+    );
+
+    return () => {
+      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+    };
+  }, []);
+
   return (
     <MaxWidthWrapper>
       <section className="py-20 px-4 mb-10 md:mb-28" id="servicios">
@@ -18,7 +55,10 @@ export default function Servicios() {
             mascota no solo luzca bien, sino que se sienta increíble.
           </p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div
+          ref={containerRef}
+          className="grid grid-cols-1 md:grid-cols-3 gap-6"
+        >
           {ServicioDatos.map(({ id, descripcion, icon: Icon, titulo }) => (
             <div
               key={id}
@@ -29,7 +69,7 @@ export default function Servicios() {
               <div className="flex flex-col gap-2">
                 <h3 className="text-slate-800 text-xl font-bold">{titulo}</h3>
                 <p className="text-slate-500 text-base leading-relaxed">
-                  {' '}
+                  {" "}
                   {descripcion}
                 </p>
               </div>
@@ -38,5 +78,5 @@ export default function Servicios() {
         </div>
       </section>
     </MaxWidthWrapper>
-  )
+  );
 }

@@ -1,4 +1,10 @@
-export const NavegacionData = [
+type NavegacionDataProps = {
+  id: number;
+  titulo: string;
+  href: string;
+}
+
+export const NavegacionData: NavegacionDataProps[] = [
   {
     id: 1,
     titulo: 'Servicios',

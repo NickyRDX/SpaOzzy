@@ -1,11 +1,18 @@
-'use client'
-import { Button } from '@/components/ui/button'
-import { PawPrint } from 'lucide-react'
-import Link from 'next/link'
-import { NavegacionData } from './Navbar.data'
-import { usePathname } from 'next/navigation'
-import { cn } from '@/lib/utils'
+"use client";
+import { Button } from "@/components/ui/button";
+import { PawPrint, User } from "lucide-react";
+import Link from "next/link";
+import { NavegacionData } from "./Navbar.data";
+import { UserButton } from "@clerk/nextjs";
+import { cn } from "@/lib/utils";
+import { useUser } from "@clerk/nextjs";
+import { usePathname } from "next/navigation";
 export default function Navbar() {
+  const { user } = useUser();
+  const userId = user?.id;
+  // console.log("Tu Id de usuario es:", userId);
+  // const i = usePathname();
+  // console.log("Tu pathname es:", i);
   return (
     <nav className="sticky z-50 top-0 inset-x-0 shadow-2xs bg-white/80 backdrop-blur-lg border border-b border-solid border-[#f0f2f5]">
       <div className="max-w-7xl mx-auto px-4 md:px-10 py-3 flex items-center justify-between whitespace-nowrap">
@@ -22,7 +29,7 @@ export default function Navbar() {
             {NavegacionData.map(({ href, id, titulo }) => (
               <Link
                 className={cn(
-                  'text-slate-700 text-sm font-medium hover:text-blue-500/80 transition-colors'
+                  "text-slate-700 text-sm font-medium hover:text-blue-500/80 transition-colors"
                 )}
                 key={id}
                 href={href}
@@ -31,13 +38,18 @@ export default function Navbar() {
               </Link>
             ))}
           </div>
-          <Button className="bg-blue-600/80 flex min-w-[120px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 text-slate-100 text-sm font-semibold leading-normal tracking-widest">
+          <Button className="bg-blue-600/80 flex min-w-[120px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 text-slate-100 text-sm font-semibold leading-normal tracking-widest ">
             <Link className="" href={`/reservar`}>
               Reservar Turno
             </Link>
           </Button>
+          {!!userId ? (
+            <div className="-ml-6 flex items-center min-h-full max-w-4xl">
+              <UserButton afterSwitchSessionUrl="/" />
+            </div>
+          ) : null}
         </div>
       </div>
     </nav>
-  )
+  );
 }

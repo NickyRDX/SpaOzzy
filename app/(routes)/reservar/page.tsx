@@ -1,6 +1,6 @@
 "use client";
 import MaxWidthWrapper from "@/components/Shared/MaxWidthWrapper/MaxWidthWrapper";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Banknote,
   CreditCard,
@@ -26,6 +26,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export default function page() {
   const [date, setDate] = useState<Date | undefined>(new Date());
@@ -33,6 +34,9 @@ export default function page() {
   const [selectedService, setSelectedService] = useState("premium");
   const [selectedTime, setSelectedTime] = useState("");
   const { user } = useUser();
+  const [reservas, setReservas] = useState<string[]>([]); // Estado: horarios ocupados de la fecha seleccionada
+  const [fechasBloqueadas, setFechasBloqueadas] = useState<string[]>([]); // Estado: fechas con TODOS los horarios ocupados
+  const router = useRouter();
 
   const horarios = [
     "09:00 AM",
@@ -51,7 +55,6 @@ export default function page() {
     "07:30 PM",
     "08:00 PM",
   ];
-
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -64,14 +67,6 @@ export default function page() {
       horario: "",
     },
   });
-
-  // El operador ...values es el "spread operator" en JavaScript.
-  // Se utiliza para expandir (copiar) todas las propiedades del objeto values en un nuevo objeto.
-  // Por ejemplo, si values es { nombre: 'Juan', edad: 30 }, entonces ...values equivale a poner nombre: 'Juan', edad: 30 dentro de otro objeto literal.
-  // a un nuevo objeto, y luego se agrega userId.
-  // Aquí, ...values copia todas las propiedades del formulario (nombreCompleto, nombreMascota, etc)
-  // Ejemplo para ver cómo es el objeto values
-
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     // 1. Verificación de seguridad
     if (!user || !user.id) return alert("Debes iniciar sesión");
@@ -85,13 +80,17 @@ export default function page() {
       raza: values.raza || null,
       // ¡BORRAMOS LA LÍNEA DE SEXO AQUÍ TAMBIÉN!
       servicio: values.tipoServicio,
-      precio: values.tipoServicio === "premium" ? 20000 : values.tipoServicio === "standard" ? 15000 : 0,
+      precio:
+        values.tipoServicio === "premium"
+          ? 20000
+          : values.tipoServicio === "standard"
+            ? 15000
+            : 0,
       fecha: values.fecha.toISOString().split("T")[0],
       horario: values.horario,
       forma_pago: values.metodoPago,
-      estado: values.metodoPago === 'efectivo' ? 'confirmado' : 'pendiente',
+      estado: values.metodoPago === "efectivo" ? "confirmado" : "pendiente",
     };
-
     console.log("Enviando a Supabase (Español):", datosTurno);
 
     // 3. ENVIAR A LA TABLA 'TURNOS'
@@ -100,15 +99,83 @@ export default function page() {
       .insert([datosTurno])
       .select();
 
-  
     if (!error) {
-      toast.success("La Reserva se ha realizado exitosamente✅")
-      console.log("data:", data);
+      console.log("📦 Data completa:", data);
+      // toast.success("La Reserva se ha realizado exitosamente✅");
     } else {
       console.error("Error:", error.message);
       toast.error("❌Error al guardar: " + error.message);
     }
+
+    if (data) {
+      toast
+        .promise<{ name: string }>(
+          () =>
+            new Promise((resolve) =>
+              setTimeout(() => resolve({ name: "" }), 4000)
+            ),
+          {
+            loading: "Cargando...",
+            success: (i) => `${i.name} La Reserva se ha realizado exitosamente✅`,
+            error: "Error",
+          }
+        )
+        .unwrap().then(() => {
+          setTimeout(() => {
+            router.push("/");
+          }, 3000);
+        });
+    }
   };
+
+  // FUNCIÓN 1: Consultar horarios ocupados de UNA fecha específica
+  const consultarReservar = async (fechaSelected: Date) => {
+    // Formatear la fecha al formato que usa la DB (YYYY-MM-DD)
+    const fechaFormatter = fechaSelected.toISOString().split("T")[0];
+    try {
+      const respuesta = await fetch(`/api/turnos?fecha=${fechaFormatter}`);
+      const data = await respuesta.json();
+      if (data.horariosOcupados) {
+        // Extraer solo los horarios del array de objetos
+        const horariosUsados = data.horariosOcupados.map(
+          (turno: any) => turno.horario
+        );
+        setReservas(horariosUsados);
+      }
+    } catch (error) {
+      console.error("Error al consultar horarios:", error);
+    }
+  };
+
+  // FUNCIÓN 2: Consultar fechas COMPLETAMENTE ocupadas (15 turnos)
+  const consultarFechasBloqueadas = async () => {
+    try {
+      // Al NO pasar parámetro "fecha", el endpoint devuelve las fechas completas
+      const respuesta = await fetch("/api/turnos");
+      const data = await respuesta.json();
+      if (data.fechasOcupadas) {
+        setFechasBloqueadas(data.fechasOcupadas);
+        console.log("Fechas bloqueadas:", data.fechasOcupadas);
+      }
+    } catch (error) {
+      console.error("Error al consultar fechas bloqueadas:", error);
+    }
+  };
+  // useEffect 1: Se ejecuta UNA VEZ al cargar la página
+  // Objetivo: Obtener TODAS las fechas que están completamente llenas
+  useEffect(() => {
+    consultarFechasBloqueadas();
+  }, []); // Array vacío [] = solo se ejecuta al montar el componente
+
+  // useEffect 2: Se ejecuta cada vez que cambias la fecha en el calendario
+  // Objetivo: Obtener los horarios ocupados de ESA fecha específica
+  useEffect(() => {
+    if (date) {
+      consultarReservar(date);
+      console.log("Consultando reservas para:", date);
+    }
+  }, [date]); // Se ejecuta cuando "date" cambia
+
   return (
     <>
       <NavReservar />
@@ -269,7 +336,7 @@ export default function page() {
                                   setSelectedService("standard");
                                 }}
                                 className={`p-6 rounded-xl border-2 transition-all text-left ${
-                                  selectedService === "estandar"
+                                  selectedService === "standard"
                                     ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
                                     : "border-slate-200 dark:border-slate-700 hover:border-slate-300"
                                 }`}
@@ -341,8 +408,32 @@ export default function page() {
                               <Calendar
                                 mode="single"
                                 selected={date}
-                                onSelect={setDate}
-                                className="rounded-md border w-full p-1  border-slate-200 dark:border-slate-700 md:max-w-full"
+                                onSelect={(newDate) => {
+                                  setDate(newDate);
+                                  if (newDate) {
+                                    field.onChange(newDate);
+                                  }
+                                }}
+                                disabled={(fecha) => {
+                                  // LÓGICA DE DESHABILITADO:
+                                  // 1. Convertir la fecha a formato YYYY-MM-DD
+                                  const fechaFormateada = fecha
+                                    .toISOString()
+                                    .split("T")[0];
+
+                                  // 2. Verificar si esta fecha está en el array de fechas bloqueadas
+                                  const estaBloqueada =
+                                    fechasBloqueadas.includes(fechaFormateada);
+
+                                  // 3. También bloqueamos fechas pasadas (antes de hoy)
+                                  const esDelPasado =
+                                    fecha <
+                                    new Date(new Date().setHours(0, 0, 0, 0));
+
+                                  // Si está bloqueada O es del pasado, deshabilitar
+                                  return estaBloqueada || esDelPasado;
+                                }}
+                                className="rounded-md border w-full px-2  border-slate-200 dark:border-slate-700 md:max-w-full"
                                 captionLayout="dropdown"
                               />
                             </FormControl>
@@ -368,23 +459,21 @@ export default function page() {
                             <FormControl>
                               <div>
                                 <div className="grid grid-cols-2 gap-3">
-                                  {horarios.map((hora) => (
-                                    <button
-                                      key={hora}
-                                      type="button"
-                                      onClick={() => {
-                                        setSelectedTime(hora);
-                                        field.onChange(hora);
-                                      }}
-                                      className={`py-3 px-4 rounded-lg text-sm border-2 font-medium transition-all ${
-                                        selectedTime === hora
-                                          ? "bg-blue-500 text-white border-blue-200"
-                                          : "border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:border-blue-300"
-                                      }`}
-                                    >
-                                      {hora}
-                                    </button>
-                                  ))}
+                                  {horarios
+                                    .filter((hora) => !reservas.includes(hora))
+                                    .map((hora) => (
+                                      <button
+                                        key={hora}
+                                        type="button"
+                                        onClick={() => {
+                                          setSelectedTime(hora);
+                                          field.onChange(hora);
+                                        }}
+                                        className={`py-3 px-4 rounded-lg text-sm border-2 font-medium transition-all ${selectedTime === hora ? "bg-blue-500 text-white border-blue-200" : "border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-200 hover:border-blue-300"}`}
+                                      >
+                                        {hora}
+                                      </button>
+                                    ))}
                                 </div>
                                 <p className="text-xs text-slate-500 dark:text-slate-400 mt-4 italic">
                                   * Solo se muestran los horarios disponibles
@@ -444,7 +533,7 @@ export default function page() {
                         </span>
                       </div>
                       <div className="text-3xl font-bold text-blue-400 dark:text-blue-400 mt-1">
-                        AR${selectedService === "premium" ? "20.000" : "12.000"}
+                        AR${selectedService === "premium" ? "20.000" : "15.000"}
                       </div>
                     </div>
 

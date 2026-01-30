@@ -1,17 +1,42 @@
-'use client'
-import React from 'react'
-import Navbar from '../(landingpage)/components/Navbar/Navbar'
-import MaxWidthWrapper from '@/components/Shared/MaxWidthWrapper/MaxWidthWrapper'
-import { Button } from '@/components/ui/button'
-import Link from 'next/link'
-import { cn } from '@/lib/utils'
-import { PreciosData } from './Precios.data'
-import { ArrowRight, CheckIcon } from 'lucide-react'
-import { Separator } from '@/components/ui/separator'
-import AccordionComponent from './components/Accordion'
-import Footer from '../(landingpage)/components/Footer/Footer'
+"use client";
+import { useEffect, useRef } from "react";
+import gsap from "gsap";
+import Navbar from "../(landingpage)/components/Navbar/Navbar";
+import MaxWidthWrapper from "@/components/Shared/MaxWidthWrapper/MaxWidthWrapper";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { cn } from "@/lib/utils";
+import { PreciosData } from "./Precios.data";
+import { ArrowRight, CheckIcon } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
+import AccordionComponent from "./components/Accordion";
+import Footer from "../(landingpage)/components/Footer/Footer";
 
 export default function PreciosPage() {
+  const cardsContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!cardsContainerRef.current) return;
+
+    const cards = cardsContainerRef.current.children;
+
+    gsap.fromTo(
+      cards,
+      {
+        opacity: 0,
+        scale: 0.6,
+      },
+      {
+        opacity: 1,
+        scale: 1,
+        duration: 0.8,
+        ease: "back.out(1.4)",
+        stagger: 0.15,
+        delay: 0.2,
+      }
+    );
+  }, []);
+
   return (
     <>
       <Navbar />
@@ -37,7 +62,10 @@ export default function PreciosPage() {
             </div>
           </div>
           <div className="mx-auto px-6 lg:px-10 pb-20 max-w-5xl">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div
+              ref={cardsContainerRef}
+              className="grid grid-cols-1 lg:grid-cols-2 gap-8"
+            >
               {/* Plan Estandar | Plan Premium*/}
               {PreciosData.map(
                 ({
@@ -53,9 +81,9 @@ export default function PreciosPage() {
                     key={id}
                     className={cn(
                       disponible
-                        ? 'border-3 border-solid border-blue-500/60'
-                        : 'border-none',
-                      'flex flex-col justify-between min-h-[500px] gap-5 rounded-xl bg-white p-8 shadow-sm hover:shadow-md transition-shadow'
+                        ? "border-3 border-solid border-blue-400/60"
+                        : "border-none",
+                      "flex flex-col justify-between max-w-2xl min-h-[500px] gap-5 rounded-tr-[2.8rem] rounded-bl-[2.8rem] bg-white p-8 shadow-sm hover:shadow-md transition-shadow"
                     )}
                   >
                     <div className="flex flex-col gap-2 space-y-3 md:space-y-1">
@@ -71,7 +99,7 @@ export default function PreciosPage() {
                       <p className="text-blue-400 text-pretty text-3xl font-semibold tracking-[-0.033em] md:text-4xl">
                         {precio}
                         <span className="text-lg tracking-tighter text-slate-600 md:text-[16px]">
-                          {' '}
+                          {" "}
                           / sesión
                         </span>
                       </p>
@@ -81,8 +109,8 @@ export default function PreciosPage() {
                       <ul
                         role="list"
                         className={cn(
-                          caracteristicas ? 'text-slate-700' : 'text-slate-700',
-                          'mt-5 space-y-3 text-sm/6 sm:mt-8'
+                          caracteristicas ? "text-slate-700" : "text-slate-700",
+                          "mt-5 space-y-3 text-sm/6 sm:mt-8"
                         )}
                       >
                         {caracteristicas.map((i) => (
@@ -98,15 +126,15 @@ export default function PreciosPage() {
                     </div>
 
                     <Button
-                      variant={disponible ? 'default' : 'ghost'}
+                      variant={disponible ? "default" : "ghost"}
                       className={cn(
                         disponible
-                          ? 'bg-blue-600/80 hover:bg-blue-900/90 transition-colors'
-                          : 'border-slate-400/50 border-solid border',
-                        'max-w-2xl mt-4 flex items-center justify-center cursor-pointer'
+                          ? "bg-blue-600/80 hover:bg-blue-900/90 transition-colors"
+                          : "border-slate-400/50 border-solid border",
+                        "max-w-2xl mt-4 flex items-center justify-center cursor-pointer"
                       )}
                     >
-                      Seleccionar
+                      <Link href={href}>Seleccionar</Link>
                       <ArrowRight className="size-4 ml-1 mt-0.5" />
                     </Button>
                   </div>
@@ -119,5 +147,5 @@ export default function PreciosPage() {
         <Footer />
       </main>
     </>
-  )
+  );
 }

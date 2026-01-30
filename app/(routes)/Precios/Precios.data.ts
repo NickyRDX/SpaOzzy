@@ -17,7 +17,7 @@ export const PreciosData: PreciosDataPros[] = [
     id: 1,
     titulo: 'Estandar',
     precio: 'AR$15.000',
-    href: '#',
+    href: 'reservar',
     descripcion:
       'Un perfecto baño, para limpiar a tu mejor amigo a un precio economico.',
     caracteristicas: [
@@ -32,7 +32,7 @@ export const PreciosData: PreciosDataPros[] = [
     id: 2,
     titulo: 'Premium',
     precio: 'AR$20.000',
-    href: '#',
+    href: 'reservar',
     descripcion: 'El mejor tratamiento para un miembro de la familia, muestrale lo mucho que lo amas.',
     caracteristicas: [
       'Baño con Shampoo Premium',
