@@ -8,7 +8,6 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { PreciosData } from "./Precios.data";
 import { ArrowRight, CheckIcon } from "lucide-react";
-import { Separator } from "@/components/ui/separator";
 import AccordionComponent from "./components/Accordion";
 import Footer from "../(landingpage)/components/Footer/Footer";
 
@@ -29,10 +28,10 @@ export default function PreciosPage() {
       {
         opacity: 1,
         scale: 1,
-        duration: 0.8,
+        duration: 1,
         ease: "back.out(1.4)",
         stagger: 0.15,
-        delay: 0.2,
+        delay: 0.7,
       }
     );
   }, []);
@@ -81,22 +80,22 @@ export default function PreciosPage() {
                     key={id}
                     className={cn(
                       disponible
-                        ? "border-3 border-solid border-blue-400/60"
+                        ? "border-3 border-solid border-blue-400/80"
                         : "border-none",
-                      "flex flex-col justify-between max-w-2xl min-h-[500px] gap-5 rounded-tr-[2.8rem] rounded-bl-[2.8rem] bg-white p-8 shadow-sm hover:shadow-md transition-shadow"
+                      "flex flex-col justify-between max-w-2xl min-h-[500px] gap-5 rounded-tr-[2.4rem] rounded-bl-[2.8rem] bg-white p-8 shadow-sm hover:shadow-md transition-shadow border-l-7"
                     )}
                   >
                     <div className="flex flex-col gap-2 space-y-3 md:space-y-1">
                       <h2 className="text-slate-700/80 text-lg text-pretty font-bold md:text-base">
                         {disponible && (
-                          <p className="text-center text-[14px] tracking-wider -m-2 bg-linear-to-r from-blue-600 to-sky-600 bg-clip-text text-transparent">
+                          <p className="text-center text-md tracking-tighter -m-2 bg-linear-to-r from-blue-600 to-sky-600 bg-clip-text text-transparent">
                             Recomendado
                           </p>
                         )}
                         <br />
                         {titulo}
                       </h2>
-                      <p className="text-blue-400 text-pretty text-3xl font-semibold tracking-[-0.033em] md:text-4xl">
+                      <p className="text-blue-400 text-pretty text-3xl font-semibold tracking-[-0.033em] ">
                         {precio}
                         <span className="text-lg tracking-tighter text-slate-600 md:text-[16px]">
                           {" "}

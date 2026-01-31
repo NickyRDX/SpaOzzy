@@ -84,8 +84,8 @@ export default function Hero() {
               <Image
                 src={ImgHeroSeccion}
                 quality={75}
-                height={600}
-                width={600}
+                height={800}
+                width={800}
                 className="absolute inset-0 transition-transform duration-700 group-hover:scale-110"
                 alt="imagen del hero session perrito en spa"
               />

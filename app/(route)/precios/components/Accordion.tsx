@@ -15,34 +15,34 @@ export default function AccordionComponent() {
       defaultValue="tiempo"
     >
       <AccordionItem value="tiempo">
-        <AccordionTrigger className="text-base">
+        <AccordionTrigger className="text-base cursor-pointer">
           Cuánto dura una sesión de peluquería canina?
         </AccordionTrigger>
-        <AccordionContent className='text-slate-700'>
+        <AccordionContent className="text-slate-500 text-base md:text-sm">
           Dependiendo del tamaño y el estado del manto, una sesión suele durar
           entre 60 y 90 minutos. Para perros de pelos largos o que requieren
           cortes especificos, puede extenderse un poco más.
         </AccordionContent>
       </AccordionItem>
       <AccordionItem value="productos">
-        <AccordionTrigger className="text-base">
+        <AccordionTrigger className="text-base cursor-pointer">
           Qué productos utilizamos para el baño?
         </AccordionTrigger>
-        <AccordionContent>
+        <AccordionContent className="text-slate-500 text-base md:text-sm">
           Utilizamos shampoos y acondicionadores profesionales hipoalergénicos,
           libres de parabenos y siliconas, seleccionados específicamente según
           el tipo de piel y pelo de tu mascota.
         </AccordionContent>
       </AccordionItem>
       <AccordionItem value="info">
-        <AccordionTrigger className="text-base">
+        <AccordionTrigger className="text-base cursor-pointer">
           Es necesario reservar con mucha antelación?
         </AccordionTrigger>
-        <AccordionContent>
+        <AccordionContent className="text-slate-500 text-base md:text-sm">
           Recomendamos reservar con al menos 48 horas de antelación para
           asegurar disponibilidad, especialmente durante los fines de semana.
         </AccordionContent>
       </AccordionItem>
     </Accordion>
-  )
+  );
 }

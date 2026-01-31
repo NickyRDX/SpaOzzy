@@ -1,13 +1,13 @@
-@import 'tailwindcss';
-@import 'tw-animate-css';
+@import "tailwindcss";
+@import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
 
-@layer utilities{
-  .bg-primary-blue{
+@layer utilities {
+  .bg-primary-blue {
     background-color: #2563eb;
   }
-  .border-primary-blue{
+  .border-primary-blue {
     border: #2563eb;
   }
 }
@@ -136,7 +136,7 @@
 html,
 body {
   width: 100%;
-  min-height: 100dvh;
+  min-height: 100vh;
   font-family: var(--font-montserrat);
   scroll-behavior: smooth;
 }
