@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   // Aqui vamos a abrir el sobre (leer los parámetros de la URL)
   const { searchParams } = new URL(request.url);
   const fecha = searchParams.get("fecha");
