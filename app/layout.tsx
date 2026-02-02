@@ -21,7 +21,7 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="es-AR">
-        <body className={`${MontSans.variable} bg-slate-200/80 antialiased`}>
+        <body className={`${MontSans.variable} bg-gray-200/90 antialiased`}>
           {children}
           <Toaster position='top-center'/>
         </body>
