@@ -68,66 +68,64 @@ export default function page() {
     },
   });
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    // 1. Verificación de seguridad
     if (!user || !user.id) return alert("Debes iniciar sesión");
 
-    // 2. EL MAPEO (La conexión mágica)
     const datosTurno = {
-      // Columna DB (Español):Dato del Formulario (Zod)
       usuario_id: user.id,
       nombre_dueno: values.nombreCompleto,
       nombre_mascota: values.nombreMascota,
       raza: values.raza || null,
-      // ¡BORRAMOS LA LÍNEA DE SEXO AQUÍ TAMBIÉN!
       servicio: values.tipoServicio,
-      precio:
-        values.tipoServicio === "premium"
-          ? 20000
-          : values.tipoServicio === "standard"
-            ? 15000
-            : 0,
+      precio: values.tipoServicio === "premium" ? 20000 : 15000,
       fecha: values.fecha.toISOString().split("T")[0],
       horario: values.horario,
       forma_pago: values.metodoPago,
       estado: values.metodoPago === "efectivo" ? "confirmado" : "pendiente",
     };
-    console.log("Enviando a Supabase:", datosTurno);
 
-    // 3. ENVIAR A LA TABLA 'TURNOS'
+    // Insertar en Supabase
     const { data, error } = await supabase
-      .from("turnos") 
+      .from("turnos")
       .insert([datosTurno])
       .select();
 
-    if (!error) {
-      console.log("📦 Data completa:", data);
-      // toast.success("La Reserva se ha realizado exitosamente✅");
-    } else {
-      console.error("Error:", error.message);
+    if (error) {
       toast.error("❌Error al guardar: " + error.message);
+      return;
     }
 
-    if (data) {
-      toast
-        .promise<{ name: string }>(
-          () =>
-            new Promise((resolve) =>
-              setTimeout(() => resolve({ name: "" }), 4000)
-            ),
-          {
-            loading: "Cargando...",
-            success: (i) => `${i.name} La Reserva se ha realizado exitosamente✅`,
-            error: "Error",
-          }
-        )
-        .unwrap().then(() => {
-          setTimeout(() => {
-            router.push("/");
-          }, 3000);
+    // Si seleccionó Mercado Pago, crear preferencia de pago
+    if (values.metodoPago === "mercadopago" && data && data[0]) {
+      try {
+        const response = await fetch("/api/mercadopago/create-preference", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            reservaId: data[0].id,
+            servicio: values.tipoServicio,
+            precio: datosTurno.precio,
+            nombreCompleto: values.nombreCompleto,
+            nombreMascota: values.nombreMascota,
+            fecha: values.fecha.toLocaleDateString(),
+            horario: values.horario,
+            usuarioId: user.id,
+          }),
         });
+
+        const { initPoint } = await response.json();
+
+        // Redirigir a Mercado Pago
+        window.location.href = initPoint;
+      } catch (error) {
+        toast.error("Error al procesar el pago");
+        console.error(error);
+      }
+    } else {
+      // Pago en efectivo - mostrar confirmación normal
+      toast.success("La Reserva se ha realizado exitosamente✅");
+      setTimeout(() => router.push("/dashboard"), 3000);
     }
   };
-
   // FUNCIÓN 1: Consultar horarios ocupados de UNA fecha específica
   const consultarReservar = async (fechaSelected: Date) => {
     // Formatear la fecha al formato que usa la DB (YYYY-MM-DD)
