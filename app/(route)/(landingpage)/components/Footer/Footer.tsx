@@ -92,7 +92,7 @@ export default function Footer() {
             </div>
           </div>
         </div>
-        <div className="max-w-7xl mx-auto px-4 pt-8 border-t border-gray-100 text-center">
+        <div className="max-w-7xl mx-auto px-4 pt-8 border-t text-muted-foreground text-center">
           © 2026 Spa Ozzy Peluquería Canina. Todos los derechos reservados.
         </div>
       </footer>

@@ -6,6 +6,8 @@ import {
   CreditCard,
   Calendar as CalendarIcon,
   Clock,
+  ArrowRight,
+  Check,
 } from "lucide-react";
 import NavReservar from "./components/NavReservar/NavReservar";
 import { Input } from "@/components/ui/input";
@@ -32,7 +34,7 @@ export default function page() {
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [selectedPayment, setSelectedPayment] = useState("efectivo");
   const [selectedService, setSelectedService] = useState("premium");
-  const [selectedTime, setSelectedTime] = useState("");
+  const [selectedTime, setSelectedTime] = useState<string>("");
   const { user } = useUser();
   const [reservas, setReservas] = useState<string[]>([]); // Estado: horarios ocupados de la fecha seleccionada
   const [fechasBloqueadas, setFechasBloqueadas] = useState<string[]>([]); // Estado: fechas con TODOS los horarios ocupados
@@ -123,7 +125,7 @@ export default function page() {
     } else {
       // Pago en efectivo - mostrar confirmación normal
       toast.success("La Reserva se ha realizado exitosamente✅");
-      setTimeout(() => router.push("/dashboard"), 3000);
+      setTimeout(() => router.push("/"), 4000);
     }
   };
   // FUNCIÓN 1: Consultar horarios ocupados de UNA fecha específica
@@ -208,7 +210,8 @@ export default function page() {
                             </FormLabel>
                             <FormControl>
                               <Input
-                                className="w-full"
+                                className="w-full focus-visible:ring-blue-300/50 focus-visible:border-blue-400"
+                                autoComplete="off"
                                 placeholder="Ej: Antoni Diaz"
                                 type="text"
                                 {...field}
@@ -228,7 +231,8 @@ export default function page() {
                             </FormLabel>
                             <FormControl>
                               <Input
-                                className="w-full"
+                                className="w-full focus-visible:ring-blue-300/50 focus-visible:border-blue-400"
+                                autoComplete="off"
                                 placeholder="Ej: Rex"
                                 type="text"
                                 {...field}
@@ -248,8 +252,9 @@ export default function page() {
                             </FormLabel>
                             <FormControl>
                               <Input
-                                className="w-full"
-                                placeholder="Ej: Rottweiler"
+                                className="w-full focus-visible:ring-blue-300/50 focus-visible:border-blue-400"
+                                autoComplete="off"
+                                placeholder="Ej: Rottweiler."
                                 type="text"
                                 {...field}
                               />
@@ -428,10 +433,13 @@ export default function page() {
                                     fecha <
                                     new Date(new Date().setHours(0, 0, 0, 0));
 
+                                  const domingos = fecha.getDay() === 0;
                                   // Si está bloqueada O es del pasado, deshabilitar
-                                  return estaBloqueada || esDelPasado;
+                                  return (
+                                    estaBloqueada || esDelPasado || domingos
+                                  );
                                 }}
-                                className="rounded-md border w-full px-2  border-slate-300 dark:border-slate-700 md:max-w-full"
+                                className="rounded-md border w-full px-2 border-slate-300 dark:border-slate-700 mx-auto max-w-sm md:max-w-md max-h-fit"
                                 captionLayout="dropdown"
                               />
                             </FormControl>
@@ -465,6 +473,7 @@ export default function page() {
                                         type="button"
                                         onClick={() => {
                                           setSelectedTime(hora);
+                                          console.log("Selected time:", setSelectedTime);
                                           field.onChange(hora);
                                         }}
                                         className={`py-3 px-4 rounded-lg text-sm border-2 font-medium transition-all ${selectedTime === hora ? "bg-blue-500 text-white border-blue-200" : "border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-200 hover:border-blue-300"}`}
@@ -490,7 +499,7 @@ export default function page() {
                 {/* Columna Derecha: Resumen */}
                 <div className="lg:col-span-1">
                   <div className="bg-white dark:bg-slate-900 rounded-xl p-6 shadow-sm border border-slate-200 dark:border-slate-800 sticky top-8">
-                    <h2 className="text-xl font-bold mb-6 text-slate-900 dark:text-white">
+                    <h2 className="text-xl text-center font-bold mb-6 text-sky-600 underline underline-offset-2 dark:text-white">
                       Resumen de Reserva
                     </h2>
 
@@ -511,7 +520,11 @@ export default function page() {
                           Fecha
                         </span>
                         <span className="font-semibold text-slate-900 dark:text-white">
-                          Martes 03 Oct
+                          {date?.toLocaleDateString('es-AR', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric',
+                          })}
                         </span>
                       </div>
                       <div className="flex justify-between text-sm">
@@ -526,21 +539,21 @@ export default function page() {
 
                     <div className="border-t border-slate-200 dark:border-slate-800 pt-4 mb-6">
                       <div className="flex justify-between items-center">
-                        <span className="text-sm font-medium text-slate-600 dark:text-slate-400">
-                          PRECIO TOTAL
+                        <span className="text-sm font-medium text-slate-700 dark:text-slate-400">
+                          PRECIO TOTAL:
                         </span>
                       </div>
-                      <div className="text-3xl font-bold text-blue-400 dark:text-blue-400 mt-1">
+                      <div className="text-2xl font-bold tracking-wide text-blue-500 dark:text-blue-400 mt-1">
                         AR${selectedService === "premium" ? "20.000" : "15.000"}
                       </div>
                     </div>
 
                     <Button
                       type="submit"
-                      className="w-full cursor-pointer bg-blue-800 dark:bg-slate-800 text-white py-5 rounded-md font-semibold hover:bg-blue-500/80 dark:hover:bg-slate-700 transition-all"
+                      className="w-full cursor-pointer text-cneter flex items-center bg-blue-600/80 dark:bg-slate-800 text-white py-5 rounded-md font-semibold hover:bg-blue-500/80 dark:hover:bg-slate-700 transition-all"
                       onClick={() => form.handleSubmit(onSubmit)}
                     >
-                      Confirmar Reserva
+                      Confirmar Reserva <Check className='size-4 ml-0.5 mt-0'/>
                     </Button>
 
                     <p className="text-xs text-center text-slate-500 dark:text-slate-400 mt-4">

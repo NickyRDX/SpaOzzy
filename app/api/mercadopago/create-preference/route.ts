@@ -28,7 +28,7 @@ export async function POST(request: Request) {
       body: {
         items: [
           {
-            title: `Servicio ${servicio} - ${nombreMascota}`,
+            title: `Servicio ${servicio} - SpaOzzy`,
             description: `Reserva para ${nombreCompleto} el ${fecha} a las ${horario}`,
             quantity: 1,
             unit_price: Number(precio),

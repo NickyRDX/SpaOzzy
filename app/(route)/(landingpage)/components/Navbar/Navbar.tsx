@@ -1,16 +1,16 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { PawPrint, User } from "lucide-react";
+import { ArrowRight, PawPrint, User } from "lucide-react";
 import Link from "next/link";
 import { NavegacionData } from "./Navbar.data";
 import { UserButton } from "@clerk/nextjs";
 import { cn } from "@/lib/utils";
 import { useUser } from "@clerk/nextjs";
-import { usePathname } from "next/navigation";
+
 export default function Navbar() {
   const { user } = useUser();
   const userId = user?.id;
-  console.log(userId)
+  console.log(userId);
 
   return (
     <nav className="sticky z-50 top-0 inset-x-0 shadow-md bg-white/90 backdrop-blur-lg border border-b border-solid border-[#f0f2f5] overflow-hidden">
@@ -40,22 +40,12 @@ export default function Navbar() {
               </Link>
             ))}
           </div>
-          <Button className="bg-blue-600/80 flex min-w-[90px] sm:min-w-[120px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-3 sm:px-4 text-slate-100 text-xs sm:text-sm font-semibold leading-normal tracking-widest shrink-0">
-            {!userId ? (
-              <Link className="" href={`/reservar`}>
-                Reservar Turno
-              </Link>
-            ) : (
-              <Link className="" href={`/dashboard`}>
-                Dashboard
-              </Link>
-            )}
+          <Button asChild className="bg-blue-600/80 flex min-w-[90px] sm:min-w-[120px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-3 sm:px-4 text-slate-100 text-xs sm:text-sm font-semibold leading-normal tracking-widest shrink-0">
+            <Link className="" href={`/reservar`}>
+              Reservar Turno
+              <ArrowRight/>
+            </Link>
           </Button>
-          {!!userId ? (
-            <div className="flex items-center shrink-0">
-              <UserButton afterSwitchSessionUrl="/" />
-            </div>
-          ) : null}
         </div>
       </div>
     </nav>
