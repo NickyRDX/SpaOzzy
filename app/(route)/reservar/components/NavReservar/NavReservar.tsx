@@ -1,8 +1,8 @@
-'use client'
-import { UserButton } from '@clerk/nextjs'
-import { PawPrint } from 'lucide-react'
-import Link from 'next/link'
-import React from 'react'
+"use client";
+import { UserButton } from "@clerk/nextjs";
+import { ArrowLeft, PawPrint } from "lucide-react";
+import Link from "next/link";
+import React from "react";
 
 export default function NavReservar() {
   return (
@@ -16,10 +16,13 @@ export default function NavReservar() {
             </h2>
           </div>
         </Link>
-        <div>
+        <div className='flex max-w-full items-center-safe space-x-6 h-full'>
+          <Link href="/">
+            <ArrowLeft size={23} className='stroke-slate-700 mt-0.5'/>
+          </Link>
           <UserButton afterSwitchSessionUrl="/" />
         </div>
       </div>
     </nav>
-  )
+  );
 }

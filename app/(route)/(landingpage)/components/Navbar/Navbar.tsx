@@ -40,7 +40,7 @@ export default function Navbar() {
               </Link>
             ))}
           </div>
-          <Button asChild className="bg-blue-600/80 flex min-w-[90px] sm:min-w-[120px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-3 sm:px-4 text-slate-100 text-xs sm:text-sm font-semibold leading-normal tracking-widest shrink-0">
+          <Button asChild className="bg-blue-600/90 flex min-w-[90px] sm:min-w-[120px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-2 sm:px-3 text-slate-100 text-sm font-semibold leading-normal tracking-wide shrink-0 hover:bg-blue-400 transition-colors">
             <Link className="" href={`/reservar`}>
               Reservar Turno
               <ArrowRight/>
